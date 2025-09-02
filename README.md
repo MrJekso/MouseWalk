@@ -5,5 +5,5 @@ The application is a screensaver for the desktop. It will help when it is necess
 
 ### commands:
 - to start: **ctrl + r**
-- to exit: **crtl + e**
+- to stop: **crtl + s**
 
