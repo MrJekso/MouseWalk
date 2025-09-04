@@ -1,10 +1,8 @@
 package org.sevenbits;
 
-import org.sevenbits.tools.Mouse;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        Mouse mouse = new Mouse();
-        mouse.run();
+    public static void main(String[] args) throws InterruptedException, IOException {
     }
 }
