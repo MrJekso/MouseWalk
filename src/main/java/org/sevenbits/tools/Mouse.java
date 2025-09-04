@@ -2,15 +2,18 @@ package org.sevenbits.tools;
 
 import java.awt.*;
 
-public class Mouse{
-    public Robot robot;
-    public Screen screen;
-    public Coordinates mouse;
+public class Mouse {
+    private Robot robot;
+    private Coordinates mouse;
+    private boolean status;
+    private int speed,sleep;
+    private Dimension dimension;
 
     public Mouse() {
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        screen = new Screen(dimension.width,dimension.height);
-        mouse = new Coordinates(200,200);
+        speed = 2;
+        sleep = 15;
+        dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        mouse = new Coordinates(0, 0);
         try {
             this.robot = new Robot();
         } catch (AWTException e) {
@@ -18,32 +21,55 @@ public class Mouse{
         }
     }
 
-    public void run(){
-        robot.mouseMove(mouse.getX(), mouse.getX());
-    }
-}
+    public void run() throws  InterruptedException{
 
-class Screen{
+        Point location = MouseInfo.getPointerInfo().getLocation();
 
-    Coordinates leftDown,leftUp,rightUp,rightDown;
+        mouse.setCordinates((int)location.getX(),(int)location.getY());
 
-    public Screen(int x, int y){
-        this.leftUp = new Coordinates(0, 0);
-        this.rightDown = new Coordinates(x,y);
-        this.leftDown = new Coordinates(leftUp.getX(),rightDown.getY());
-        this.rightUp = new Coordinates(rightDown.getX(),leftUp.getY());
-    }
+        boolean checkY = true;
+        boolean checkX = false;
+        int y = mouse.getY();
+        int x =mouse.getX();
 
-    public Coordinates getLeftDown() {
-        return leftDown;
+        while(this.status){
+            robot.mouseMove(mouse.getX(), mouse.getY());
+            Thread.sleep(sleep);
+
+
+            if(y > dimension.height){
+                checkY = false;
+            }
+            if(y < 0){
+                checkY = true;
+            }
+
+            if(checkY) {
+                y+= speed;
+                mouse.setY(mouse.getY() + speed);
+            }else{
+                y-= speed;
+                mouse.setY(mouse.getY() - speed);
+            }
+
+            if(x > dimension.width){
+                checkX = false;
+            }
+            if(x < 0){
+                checkX = true;
+            }
+            if(checkX) {
+                x+=speed;
+                mouse.setX(mouse.getX() + speed);
+            }else{
+                x-=speed;
+                mouse.setX(mouse.getX() - speed);
+            }
+        }
     }
-    public Coordinates getLeftUp() {
-        return leftUp;
+    protected void setStatus(Boolean status) {
+        this.status = status;
     }
-    public Coordinates getRightUp() {
-        return rightUp;
-    }
-    public Coordinates getRightDown() {return rightDown;}
 }
 
 class Coordinates{
@@ -54,6 +80,7 @@ class Coordinates{
         this.y = y;
     }
 
+    public void setCordinates(int x,int y) {this.x = x;this.y = y;}
     public int getX() {
         return x;
     }
